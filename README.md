@@ -18,3 +18,5 @@ utilizando Git y GitHub.
 - `index.html`: estructura de la página.
 - `styles.css`: estilos de la página.
 - `app.js`: lógica e interacción.
+
+##att: Abraham Marin
