@@ -19,4 +19,4 @@ utilizando Git y GitHub.
 - `styles.css`: estilos de la página.
 - `app.js`: lógica e interacción.
 
-##att: Autor Desconocido
+##att: Abraham Marin
