@@ -1,5 +1,6 @@
 "use client";
-import { useState, useRef } from "react";
+
+import { useState, useRef, ChangeEvent, KeyboardEvent, CSSProperties } from "react";
 
 // ──────────────────────────────────────────────────────────
 // Mi lista de tareas — CRUD completo
@@ -12,18 +13,24 @@ import { useState, useRef } from "react";
 //         el botón "Eliminar" sí la borra por completo
 // ──────────────────────────────────────────────────────────
 
+interface Task {
+  id: number;
+  text: string;
+  completed: boolean;
+}
+
 export default function TodoList() {
-  const [tasks, setTasks] = useState([
+  const [tasks, setTasks] = useState<Task[]>([
     { id: 1, text: "Aprender JSX", completed: false },
     { id: 2, text: "Crear una función en JavaScript", completed: true },
   ]);
-  const [newTaskText, setNewTaskText] = useState("");
-  const [editingId, setEditingId] = useState(null);
-  const [editingText, setEditingText] = useState("");
-  const nextId = useRef(3);
+  const [newTaskText, setNewTaskText] = useState<string>("");
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editingText, setEditingText] = useState<string>("");
+  const nextId = useRef<number>(3);
 
   // CREATE — solo con Enter, sin botón
-  const handleNewTaskKeyDown = (e) => {
+  const handleNewTaskKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key !== "Enter") return;
     const text = newTaskText.trim();
     if (text === "") return;
@@ -37,13 +44,13 @@ export default function TodoList() {
   };
 
   // UPDATE — entrar en modo edición al hacer clic en el texto
-  const startEditing = (task) => {
+  const startEditing = (task: Task) => {
     setEditingId(task.id);
     setEditingText(task.text);
   };
 
   // UPDATE — autoguardado al salir del campo (blur)
-  const saveEdit = (id) => {
+  const saveEdit = (id: number) => {
     const text = editingText.trim();
     setTasks((prev) =>
       prev.map((t) =>
@@ -54,9 +61,9 @@ export default function TodoList() {
     setEditingText("");
   };
 
-  const handleEditKeyDown = (e, id) => {
+  const handleEditKeyDown = (e: KeyboardEvent<HTMLInputElement>, id: number) => {
     if (e.key === "Enter") {
-      e.target.blur(); // dispara saveEdit vía onBlur
+      (e.target as HTMLInputElement).blur(); // dispara saveEdit vía onBlur
     }
     if (e.key === "Escape") {
       setEditingId(null);
@@ -65,7 +72,7 @@ export default function TodoList() {
   };
 
   // El chulito SOLO tacha (toggle completed), nunca borra
-  const toggleCompleted = (id) => {
+  const toggleCompleted = (id: number) => {
     setTasks((prev) =>
       prev.map((t) =>
         t.id === id ? { ...t, completed: !t.completed } : t
@@ -74,7 +81,7 @@ export default function TodoList() {
   };
 
   // DELETE — este botón sí elimina por completo
-  const deleteTask = (id) => {
+  const deleteTask = (id: number) => {
     setTasks((prev) => prev.filter((t) => t.id !== id));
   };
 
@@ -93,7 +100,7 @@ export default function TodoList() {
           type="text"
           placeholder="Ejemplo: Estudiar JavaScript"
           value={newTaskText}
-          onChange={(e) => setNewTaskText(e.target.value)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setNewTaskText(e.target.value)}
           onKeyDown={handleNewTaskKeyDown}
           style={styles.input}
         />
@@ -127,7 +134,7 @@ export default function TodoList() {
                 autoFocus
                 type="text"
                 value={editingText}
-                onChange={(e) => setEditingText(e.target.value)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setEditingText(e.target.value)}
                 onBlur={() => saveEdit(task.id)}
                 onKeyDown={(e) => handleEditKeyDown(e, task.id)}
                 style={styles.editInput}
@@ -159,7 +166,7 @@ export default function TodoList() {
   );
 }
 
-const styles = {
+const styles: { [key: string]: CSSProperties } = {
   page: {
     minHeight: "100vh",
     background: "#f2f2f6",
