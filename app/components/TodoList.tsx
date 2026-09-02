@@ -2,17 +2,6 @@
 
 import { useState, useRef, ChangeEvent, KeyboardEvent, CSSProperties } from "react";
 
-// ──────────────────────────────────────────────────────────
-// Mi lista de tareas — CRUD completo
-//
-// CREATE: escribes en el input y presionas Enter (no hay botón de agregar)
-// READ:   la lista se renderiza desde el estado "tasks"
-// UPDATE: haces clic sobre el texto de una tarea para editarla;
-//         se guarda sola al salir del campo (blur) o al presionar Enter
-// DELETE: el círculo (chulito) SOLO tacha/destacha la tarea, nunca la borra
-//         el botón "Eliminar" sí la borra por completo
-// ──────────────────────────────────────────────────────────
-
 interface Task {
   id: number;
   text: string;
@@ -29,7 +18,6 @@ export default function TodoList() {
   const [editingText, setEditingText] = useState<string>("");
   const nextId = useRef<number>(3);
 
-  // CREATE — solo con Enter, sin botón
   const handleNewTaskKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key !== "Enter") return;
     const text = newTaskText.trim();
@@ -43,13 +31,11 @@ export default function TodoList() {
     setNewTaskText("");
   };
 
-  // UPDATE — entrar en modo edición al hacer clic en el texto
   const startEditing = (task: Task) => {
     setEditingId(task.id);
     setEditingText(task.text);
   };
 
-  // UPDATE — autoguardado al salir del campo (blur)
   const saveEdit = (id: number) => {
     const text = editingText.trim();
     setTasks((prev) =>
@@ -63,7 +49,7 @@ export default function TodoList() {
 
   const handleEditKeyDown = (e: KeyboardEvent<HTMLInputElement>, id: number) => {
     if (e.key === "Enter") {
-      (e.target as HTMLInputElement).blur(); // dispara saveEdit vía onBlur
+      (e.target as HTMLInputElement).blur();
     }
     if (e.key === "Escape") {
       setEditingId(null);
@@ -71,7 +57,6 @@ export default function TodoList() {
     }
   };
 
-  // El chulito SOLO tacha (toggle completed), nunca borra
   const toggleCompleted = (id: number) => {
     setTasks((prev) =>
       prev.map((t) =>
@@ -80,7 +65,6 @@ export default function TodoList() {
     );
   };
 
-  // DELETE — este botón sí elimina por completo
   const deleteTask = (id: number) => {
     setTasks((prev) => prev.filter((t) => t.id !== id));
   };
@@ -125,7 +109,7 @@ export default function TodoList() {
               }
               style={{
                 ...styles.checkbox,
-                background: task.completed ? "#5b4feb" : "#e2e2ea",
+                background: task.completed ? "#8b5cf6" : "#cbd5e1",
               }}
             />
 
@@ -146,7 +130,7 @@ export default function TodoList() {
                 style={{
                   ...styles.taskText,
                   textDecoration: task.completed ? "line-through" : "none",
-                  color: task.completed ? "#9a9aa8" : "#1a1a2e",
+                  color: task.completed ? "#94a3b8" : "#0f172a",
                 }}
               >
                 {task.text}
@@ -169,9 +153,10 @@ export default function TodoList() {
 const styles: { [key: string]: CSSProperties } = {
   page: {
     minHeight: "100vh",
-    background: "#f2f2f6",
+    background: "linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%)",
     display: "flex",
     justifyContent: "center",
+    alignItems: "center",
     padding: "48px 20px",
     fontFamily:
       "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
@@ -179,101 +164,112 @@ const styles: { [key: string]: CSSProperties } = {
   card: {
     background: "#ffffff",
     borderRadius: 24,
-    padding: "40px 40px 24px",
+    padding: "40px 36px 28px",
     width: "100%",
-    maxWidth: 560,
-    boxShadow: "0 20px 40px rgba(20,20,50,0.06)",
+    maxWidth: 520,
+    boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.35)",
   },
   eyebrow: {
     display: "inline-block",
-    background: "#e9e7fd",
-    color: "#5b4feb",
+    background: "linear-gradient(90deg, #6366f1, #8b5cf6)",
+    color: "#ffffff",
     fontWeight: 700,
     fontSize: 12,
-    letterSpacing: 0.4,
-    padding: "4px 10px",
-    borderRadius: 6,
+    letterSpacing: 0.5,
+    padding: "6px 12px",
+    borderRadius: 20,
     marginBottom: 16,
+    textTransform: "uppercase",
   },
   title: {
-    fontSize: 40,
+    fontSize: 36,
     fontWeight: 800,
-    color: "#14142b",
+    color: "#0f172a",
     margin: "0 0 8px",
+    letterSpacing: "-0.02em",
   },
   subtitle: {
-    color: "#6b6b7a",
-    fontSize: 16,
+    color: "#475569",
+    fontSize: 15,
     margin: "0 0 24px",
+    lineHeight: 1.5,
   },
   input: {
     width: "100%",
     boxSizing: "border-box",
-    padding: "14px 16px",
-    borderRadius: 12,
-    border: "1px solid #e2e2ea",
+    padding: "16px 18px",
+    borderRadius: 14,
+    border: "2px solid #e2e8f0",
     fontSize: 15,
+    color: "#0f172a",
     outline: "none",
     marginBottom: 20,
+    background: "#f8fafc",
   },
   statsBar: {
     display: "flex",
     justifyContent: "space-between",
-    background: "#f6f6fa",
+    background: "#f1f5f9",
     borderRadius: 12,
-    padding: "14px 18px",
-    marginBottom: 12,
+    padding: "12px 18px",
+    marginBottom: 16,
+    border: "1px solid #e2e8f0",
   },
   statsText: {
-    fontWeight: 600,
-    color: "#14142b",
-    fontSize: 14,
+    fontWeight: 700,
+    color: "#334155",
+    fontSize: 13,
   },
   emptyState: {
-    color: "#9a9aa8",
+    color: "#64748b",
     fontSize: 14,
-    padding: "12px 4px",
+    textAlign: "center",
+    padding: "24px 0",
+    fontWeight: 500,
   },
   taskRow: {
     display: "flex",
     alignItems: "center",
     gap: 14,
-    background: "#f9f9fc",
-    borderRadius: 12,
+    background: "#f8fafc",
+    border: "1px solid #e2e8f0",
+    borderRadius: 14,
     padding: "14px 16px",
     marginBottom: 10,
   },
   checkbox: {
-    width: 20,
-    height: 20,
-    minWidth: 20,
+    width: 22,
+    height: 22,
+    minWidth: 22,
     borderRadius: "50%",
     border: "none",
     cursor: "pointer",
     padding: 0,
+    boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
   },
   taskText: {
     flex: 1,
     fontSize: 15,
-    color: "#1a1a2e",
-    cursor: "text",
+    fontWeight: 500,
+    cursor: "pointer",
   },
   editInput: {
     flex: 1,
     fontSize: 15,
-    padding: "6px 10px",
+    padding: "8px 12px",
     borderRadius: 8,
-    border: "1px solid #5b4feb",
+    border: "2px solid #6366f1",
     outline: "none",
+    color: "#0f172a",
   },
   deleteButton: {
-    background: "#fde3e3",
-    color: "#c0392b",
+    background: "#ffe4e6",
+    color: "#e11d48",
     border: "none",
-    borderRadius: 8,
+    borderRadius: 10,
     padding: "8px 14px",
     fontWeight: 700,
-    fontSize: 13,
+    fontSize: 12,
     cursor: "pointer",
   },
 };
