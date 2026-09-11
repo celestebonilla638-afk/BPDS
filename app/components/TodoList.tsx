@@ -210,7 +210,6 @@ const styles: { [key: string]: CSSProperties } = {
   },
   contador: {  
     color: "#000000",
-
   },
   card: {
     background: "#ffffff",
@@ -337,7 +336,6 @@ const styles: { [key: string]: CSSProperties } = {
     fontSize: 12,
     cursor: "pointer",
   },
- feature/papelera-de-tareas
   trashContainer: {
     marginTop: 32,
     borderTop: "2px dashed #e2e8f0",
@@ -389,5 +387,3 @@ const styles: { [key: string]: CSSProperties } = {
     cursor: "pointer",
   },
 };
-
-main
