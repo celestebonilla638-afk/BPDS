@@ -13,6 +13,7 @@ export default function TodoList() {
     { id: 1, text: "Aprender JSX", completed: false },
     { id: 2, text: "Crear una función en JavaScript", completed: true },
   ]);
+  const [deletedTasks, setDeletedTasks] = useState<Task[]>([]);
   const [newTaskText, setNewTaskText] = useState<string>("");
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editingText, setEditingText] = useState<string>("");
@@ -66,7 +67,23 @@ export default function TodoList() {
   };
 
   const deleteTask = (id: number) => {
+    const taskToDelete = tasks.find((t) => t.id === id);
+    if (!taskToDelete) return;
+
+    setDeletedTasks((prev) => [taskToDelete, ...prev]);
     setTasks((prev) => prev.filter((t) => t.id !== id));
+  };
+
+  const restoreTask = (id: number) => {
+    const taskToRestore = deletedTasks.find((t) => t.id === id);
+    if (!taskToRestore) return;
+
+    setTasks((prev) => [...prev, taskToRestore]);
+    setDeletedTasks((prev) => prev.filter((t) => t.id !== id));
+  };
+
+  const clearTrash = () => {
+    setDeletedTasks([]);
   };
 
   const completedCount = tasks.filter((t) => t.completed).length;
@@ -145,6 +162,28 @@ export default function TodoList() {
             </button>
           </div>
         ))}
+
+        {deletedTasks.length > 0 && (
+          <div style={styles.trashContainer}>
+            <div style={styles.trashHeader}>
+              <h2 style={styles.trashTitle}>🗑️ Papelera ({deletedTasks.length})</h2>
+              <button onClick={clearTrash} style={styles.clearTrashButton}>
+                Vaciar papelera
+              </button>
+            </div>
+            {deletedTasks.map((task) => (
+              <div key={task.id} style={styles.trashRow}>
+                <span style={styles.trashText}>{task.text}</span>
+                <button
+                  onClick={() => restoreTask(task.id)}
+                  style={styles.restoreButton}
+                >
+                  Restaurar
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -270,6 +309,56 @@ const styles: { [key: string]: CSSProperties } = {
     padding: "8px 14px",
     fontWeight: 700,
     fontSize: 12,
+    cursor: "pointer",
+  },
+  trashContainer: {
+    marginTop: 32,
+    borderTop: "2px dashed #e2e8f0",
+    paddingTop: 20,
+  },
+  trashHeader: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 12,
+  },
+  trashTitle: {
+    fontSize: 16,
+    fontWeight: 700,
+    color: "#334155",
+    margin: 0,
+  },
+  clearTrashButton: {
+    background: "transparent",
+    color: "#64748b",
+    border: "none",
+    fontSize: 12,
+    fontWeight: 600,
+    cursor: "pointer",
+  },
+  trashRow: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    background: "#f1f5f9",
+    border: "1px solid #e2e8f0",
+    borderRadius: 12,
+    padding: "10px 14px",
+    marginBottom: 8,
+  },
+  trashText: {
+    color: "#64748b",
+    fontSize: 14,
+    textDecoration: "line-through",
+  },
+  restoreButton: {
+    background: "#e0e7ff",
+    color: "#4f46e5",
+    border: "none",
+    borderRadius: 8,
+    padding: "6px 12px",
+    fontWeight: 700,
+    fontSize: 11,
     cursor: "pointer",
   },
 };
