@@ -1,5 +1,4 @@
 "use client";
-
 import { useState, useRef, ChangeEvent, KeyboardEvent, CSSProperties } from "react";
 
 interface Task {
@@ -17,6 +16,7 @@ export default function TodoList() {
   const [newTaskText, setNewTaskText] = useState<string>("");
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editingText, setEditingText] = useState<string>("");
+  const [count, setCount] = useState<number>(0); // Estado del contador de la imagen
   const nextId = useRef<number>(3);
 
   const handleNewTaskKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -96,8 +96,17 @@ export default function TodoList() {
         <p style={styles.subtitle}>
           Escribe lo que debes hacer hoy y presiona Enter.
         </p>
-
-        <input
+<span style={styles.contador}  >Total de tareas: {tasks.length}</span> 
+        {/* Botón de contador integrado 
+        <button 
+          onClick={() => setCount(count + 1)}
+          style={styles.counterButton}
+        >
+          Contador: {count} 
+        </button>
+       */}  
+       
+       <input
           type="text"
           placeholder="Ejemplo: Estudiar JavaScript"
           value={newTaskText}
@@ -105,7 +114,6 @@ export default function TodoList() {
           onKeyDown={handleNewTaskKeyDown}
           style={styles.input}
         />
-
         <div style={styles.statsBar}>
           <span style={styles.statsText}>
             {tasks.length} {tasks.length === 1 ? "tarea" : "tareas"}
@@ -200,6 +208,10 @@ const styles: { [key: string]: CSSProperties } = {
     fontFamily:
       "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
   },
+  contador: {  
+    color: "#000000",
+
+  },
   card: {
     background: "#ffffff",
     borderRadius: 24,
@@ -230,8 +242,22 @@ const styles: { [key: string]: CSSProperties } = {
   subtitle: {
     color: "#475569",
     fontSize: 15,
-    margin: "0 0 24px",
+    margin: "0 0 20px",
     lineHeight: 1.5,
+  },
+  counterButton: {
+    width: "100%",
+    background: "linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)",
+    color: "#ffffff",
+    border: "none",
+    borderRadius: 14,
+    padding: "14px 18px",
+    fontSize: 16,
+    fontWeight: 700,
+    cursor: "pointer",
+    marginBottom: 20,
+    boxShadow: "0 4px 12px rgba(99, 102, 241, 0.3)",
+    transition: "transform 0.1s ease",
   },
   input: {
     width: "100%",
@@ -311,6 +337,7 @@ const styles: { [key: string]: CSSProperties } = {
     fontSize: 12,
     cursor: "pointer",
   },
+ feature/papelera-de-tareas
   trashContainer: {
     marginTop: 32,
     borderTop: "2px dashed #e2e8f0",
@@ -362,3 +389,5 @@ const styles: { [key: string]: CSSProperties } = {
     cursor: "pointer",
   },
 };
+
+main
